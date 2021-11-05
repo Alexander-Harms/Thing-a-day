@@ -1,4 +1,5 @@
-#TODO: Solve Sudoku games
+#TODONE: Solve Sudoku games
+import time
 
 puzzle = [
     [0,0,0,0,6,0,0,5,8],
@@ -28,21 +29,48 @@ def Get_Box(row, column):
             box.append(puzzle[i + row][j + column])
     return box
 
-def Check_Row(row):
-    return len(set(row)) == 9
-
-def Check_Column(column):
-    return len(set(column)) == 9
-
-def Check_Box(row, column):
-    return len(set(Get_Box(row, column))) == 9
-
 def Find_Empty_Cell(puzzle):
-    for i in range(len(puzzle)):
-        for j in range(len(puzzle)):
+    for i in range(9):
+        for j in range(9):
             if puzzle[i][j] == 0:
                 return i, j
+    return None, None
 
 def Valid_Move(value, row, column):
     return value not in Get_Row(row) and value not in Get_Column(column) and value not in Get_Box(row - row % 3, column - column % 3)
 
+
+def Solve_Puzzle(puzzle):
+    row, column = Find_Empty_Cell(puzzle)
+    if row == None:
+        return True
+    for i in range(1, 10):
+        if Valid_Move(i, row, column):
+            puzzle[row][column] = i
+            if Solve_Puzzle(puzzle):
+                return True
+            puzzle[row][column] = 0
+    return False
+
+def Print_Puzzle():
+    print("\n")
+    for i in range(9):
+        if i % 3 == 0 and i != 0:
+            print("―――――――――――――――――――――――")
+        for j in range(9):
+            if j % 3 == 0 and j != 0:
+                print(" | ", end="")
+            print(puzzle[i][j], end = ' ')
+        print()
+
+
+
+
+def main():
+    Print_Puzzle()
+    Solve_Puzzle(puzzle)
+    Print_Puzzle()
+
+
+if __name__ == '__main__':
+    main()
